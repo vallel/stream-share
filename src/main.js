@@ -7,13 +7,20 @@ const BrowserWindow = electron.BrowserWindow
 const path = require('path')
 const url = require('url')
 
+const {ipcMain} = require('electron')
+const streamersService = require('./services/streamers')
+const twitterService = require('./services/twitter')(ipcMain)
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 900, height: 680})
+  mainWindow = new BrowserWindow({
+    width: 900, 
+    height: 680
+  })
 
   const startUrl = process.env.ELECTRON_START_URL || url.format({
     pathname: path.join(__dirname, '/../build/index.html'),
@@ -34,6 +41,8 @@ function createWindow () {
     // when you should delete the corresponding element.
     mainWindow = null
   })
+
+  twitterService.tweetsStreaming()
 }
 
 // This method will be called when Electron has finished
@@ -58,5 +67,35 @@ app.on('activate', function () {
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+ipcMain.on('getStreamers', function(event, arg) {
+  streamersService.getAll(function(error, data) {
+    let response = {
+      success: !error,
+      error: error,
+      data: data
+    }
+    event.sender.send('streamers', response)
+  })
+})
+
+ipcMain.on('addStreamer', function(event, data) {
+  streamersService.add(data.twitter, data.twitch, function(error, data) {
+    twitterService.restartStream()
+    event.sender.send('streamerAdded', {
+      success: !error,
+      error: error,
+      data: data
+    })
+  })
+})
+
+ipcMain.on('deleteStreamer', function(event, data) {
+  streamersService.delete(data.twitch, function(error, data) {
+    twitterService.restartStream()
+    event.sender.send('streamerDeleted', {
+      success: !error, 
+      error: error,
+      data: data
+    })
+  })
+})

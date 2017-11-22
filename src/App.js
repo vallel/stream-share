@@ -3,6 +3,8 @@ import Config from './Config';
 import socketIOClient from "socket.io-client";
 import './App.css';
 
+const { ipcRenderer } = window.require('electron');
+
 const totalTweetsToShow = 25;
 
 class App extends Component {
@@ -17,8 +19,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    var socket = socketIOClient('http://localhost:3001');
-    socket.on('tweet', tweet => {
+    ipcRenderer.on('tweet', tweet => {
       var tweets = this.state.tweets.slice();
       tweets.unshift(tweet);
       tweets = tweets.slice(0, totalTweetsToShow);

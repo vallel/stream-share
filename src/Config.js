@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+const { ipcRenderer } = window.require('electron');
+
 class Config extends Component {
     constructor() {
         super();
@@ -16,32 +18,17 @@ class Config extends Component {
     }
 
     componentDidMount() {
-        fetch('/streamers')
-            .then(res => res.json())
-            .then(response => {
-                var streamers = [];
-                if (!response.error) {
-                    streamers = response.data;
-                }
-                this.setState({streamers: streamers});
-            });
-    }
+        ipcRenderer.send('getStreamers');
+        
+        ipcRenderer.on('streamers', (event, res) => {
+            var streamers = [];
+            if (!res.error) {
+                streamers = res.data;
+            }
+            this.setState({streamers: streamers});
+        });
 
-    addStreamer(evt) {
-        evt.preventDefault();
-
-        fetch('/streamers/add', {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                twitter: this.state.twitter,
-                twitch: this.state.twitch
-            })
-        })
-        .then(response => response.json())
-        .then(res => {
+        ipcRenderer.on('streamerAdded', (event, res) => {
             if (res.success) {
                 this.setState({
                     twitter: '',
@@ -49,8 +36,24 @@ class Config extends Component {
                     streamers: res.data
                 });
             } else {
-                alert(res.error);
+                console.log(res.error);
             }
+        });
+
+        ipcRenderer.on('streamerDeleted', (event, res) => {
+            if (res.success) {
+                this.setState({
+                    streamers: res.data
+                });
+            }
+        });
+    }
+
+    addStreamer(evt) {
+        evt.preventDefault();
+        ipcRenderer.send('addStreamer', {
+            twitter: this.state.twitter,
+            twitch: this.state.twitch
         });
     }
 
@@ -60,21 +63,7 @@ class Config extends Component {
             twitchUser = evt.target.parentNode.value;
         }
         
-        fetch('/streamers/delete', {
-            method: 'delete',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ twitch: twitchUser })
-        })
-        .then(response => response.json())
-        .then(res => {
-            if (res.success) {
-                this.setState({
-                    streamers: res.data
-                });
-            }
-        });
+        ipcRenderer.send('deleteStreamer', { twitch: twitchUser });
     }
 
     twitterChanged(evt) {

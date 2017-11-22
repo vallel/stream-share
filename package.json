@@ -2,14 +2,14 @@
   "name": "reshare-my-stream",
   "version": "0.1.0",
   "private": true,
-  "main": "src/electron-starter.js",
+  "main": "src/main.js",
   "homepage": "./",
   "dependencies": {
     "bootstrap": "^3.3.7",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-scripts": "1.0.17",
-    "socket.io": "^2.0.4"
+    "twitter": "^1.7.1"
   },
   "scripts": {
     "start": "react-scripts start",
