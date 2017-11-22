@@ -19,7 +19,8 @@ function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 900, 
-    height: 680
+    height: 680,
+    title: 'Stream reshare'
   })
 
   const startUrl = process.env.ELECTRON_START_URL || url.format({
