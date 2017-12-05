@@ -32,6 +32,10 @@ class App extends Component {
 
   showConfig() {
     this.setState({showConfig: !this.state.showConfig});
+
+    if (!this.state.showConfig) {
+      ipcRenderer.send('restartStream');
+    }
   }
 
   render() {
@@ -45,7 +49,7 @@ class App extends Component {
           onClick={this.showConfig}>
           <span className="glyphicon glyphicon-cog"></span>
         </button>
-        <div className="container">
+        <div className="container-fluid">
           <h1 className="last-tweets-title text-primary">Últimos tweets compartidos:</h1>
           <div className="tweets">
             {this.state.tweets.map(tweet =>

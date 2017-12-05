@@ -1,18 +1,23 @@
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
+body {
+  background-color: #eee;
+}
+
 .container {
   position: relative;
 }
 
 .last-tweets-title {
-  font-size: 28px;
-  line-height: 38px;
+  font-size: 20px;
+  line-height: 30px;
   margin-bottom: 20px;
 }
 
 .tweet {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  padding: 5px;
+  border: 1px solid #ddd;
+  margin-top: 5px;
 }
 
 .tweet-user-img {
@@ -45,11 +50,12 @@
 }
 
 .config-panel {
+  color: #fff;
   position: absolute;
   top: 0;
   right: 0;
   z-index: 10;
-  background-color: #eee;
+  background-color: #428bca;
   border-left: 1px solid #ddd;
   padding: 0 15px;
   min-height: 100%;
@@ -57,7 +63,7 @@
 }
 
 .config-panel .page-header {
-  margin-top: 30px;
+  margin-top: 25px;
   border-color: #ddd;
 }
 

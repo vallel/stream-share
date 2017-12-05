@@ -106,7 +106,7 @@ class Config extends Component {
                         <input type="text" name="twitch" className="form-control" value={this.state.twitch} onChange={this.twitchChanged}/>
                     </div>
 
-                    <button className="btn btn-primary" onClick={this.addStreamer}>Agregar</button>
+                    <button className="btn btn-default" onClick={this.addStreamer}>Agregar</button>
                 </form>
 
                 <h4 className="page-header">Lista de streamers:</h4>

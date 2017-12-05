@@ -80,7 +80,6 @@ ipcMain.on('getStreamers', function(event, arg) {
 
 ipcMain.on('addStreamer', function(event, data) {
   streamersService.add(data.twitter, data.twitch, function(error, data) {
-    twitterService.restartStream()
     event.sender.send('streamerAdded', {
       success: !error,
       error: error,
@@ -91,11 +90,14 @@ ipcMain.on('addStreamer', function(event, data) {
 
 ipcMain.on('deleteStreamer', function(event, data) {
   streamersService.delete(data.twitch, function(error, data) {
-    twitterService.restartStream()
     event.sender.send('streamerDeleted', {
       success: !error, 
       error: error,
       data: data
     })
   })
+})
+
+ipcMain.on('restartStream', function(event, data) {
+  twitterService.restartStream()
 })

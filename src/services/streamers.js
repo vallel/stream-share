@@ -3,7 +3,8 @@ var fs = require('fs');
 
 var streamers = {
     getAll: function(callback) {
-        fs.readFile(process.env.DATA_FILE, 'utf8',(error, data) => {
+        var filePath = getFilePath();
+        fs.readFile(filePath, 'utf8',(error, data) => {
             if (error && error.code && error.code == 'ENOENT') {
                 error = null;
                 data = null;
@@ -35,7 +36,8 @@ var streamers = {
     },
 
     save: function(data, callback) {
-        fs.writeFile(process.env.DATA_FILE, JSON.stringify(data), function(error) {
+        var filePath = getFilePath();
+        fs.writeFile(filePath, JSON.stringify(data), function(error) {
             callback(error, data);
         });
     },
@@ -67,6 +69,10 @@ var streamers = {
         });
     }
 };
+
+function getFilePath() {
+    return process.resourcesPath + process.env.DATA_FILE;
+}
 
 function find(list, twitch) {
     var index = -1;
