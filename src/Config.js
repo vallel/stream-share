@@ -128,8 +128,8 @@ class Config extends Component {
 function Streamer(props) {
     return (
         <tr>
-            <td><a href={'http://twitter/' + props.twitter} target="_blank">@{props.twitter}</a></td>
-            <td><a href={'http://twitch.tv/' + props.twitch} target="_blank">http://twitch.tv/{props.twitch}</a></td>
+            <td><a href={'https://twitter/' + props.twitter} target="_blank">@{props.twitter}</a></td>
+            <td><a href={'https://twitch.tv/' + props.twitch} target="_blank">{props.twitch}</a></td>
             <td>
                 <button className="btn btn-xs btn-danger" onClick={props.deleteStreamer} value={props.twitch}>
                     <span className="glyphicon glyphicon-remove"></span>

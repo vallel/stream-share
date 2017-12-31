@@ -42,7 +42,11 @@ function createWindow () {
     mainWindow = null
   })
 
-  twitterService.tweetsStreaming()
+  mainWindow.webContents.on('did-finish-load', () => {
+    twitterService.tweetsStreaming(function(tweet) {
+      mainWindow.webContents.send('tweet', tweet)
+    })
+  })
 }
 
 // This method will be called when Electron has finished
@@ -79,13 +83,17 @@ ipcMain.on('getStreamers', function(event, arg) {
 })
 
 ipcMain.on('addStreamer', function(event, data) {
-  streamersService.add(data.twitter, data.twitch, function(error, data) {
-    event.sender.send('streamerAdded', {
-      success: !error,
-      error: error,
-      data: data
-    })
-  })
+  twitterService.getUserByScreenName(data.twitter, function(userData) {
+    if (userData) {
+      streamersService.add(userData.id, data.twitter, data.twitch, function(error, data) {
+        event.sender.send('streamerAdded', {
+          success: !error,
+          error: error,
+          data: data
+        })
+      })
+    }
+  });
 })
 
 ipcMain.on('deleteStreamer', function(event, data) {

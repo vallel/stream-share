@@ -1,5 +1,5 @@
-var dotenv = require('dotenv').load();
-var fs = require('fs');
+const dotenv = require('dotenv').load();
+const fs = require('fs');
 
 var streamers = {
     getAll: function(callback) {
@@ -15,12 +15,13 @@ var streamers = {
         });
     },
 
-    add: function(twitterUsername, twitchUsername, callback) {
+    add: function(twitterId, twitterUsername, twitchUsername, callback) {
         streamers.getAll(function(error, data) {
             if (error) {
                 callback(error);
             } else {
                 var streamer = {
+                    twitterId: twitterId,
                     twitter: twitterUsername,
                     twitch: twitchUsername
                 };
@@ -60,8 +61,12 @@ var streamers = {
 
             if (!error) {
                 for (var i = 0; i < list.length; i++) {
-                    var twitchUrl = 'http://twitch.tv/' + list[i].twitch;
-                    obj[twitchUrl] = list[i].twitter;
+                    var twitchUrl = 'twitch.tv/' + list[i].twitch;
+                    var data = {
+                        twitter: list[i].twitter,
+                        twitch: twitchUrl
+                    };
+                    obj[list[i].twitterId] = data;
                 }
             }
             
@@ -71,7 +76,8 @@ var streamers = {
 };
 
 function getFilePath() {
-    return process.resourcesPath + process.env.DATA_FILE;
+    var path = process.env.ENV == 'dev' ? '' : process.resourcesPath;
+    return path + process.env.DATA_FILE;
 }
 
 function find(list, twitch) {

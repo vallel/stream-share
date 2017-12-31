@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Config from './Config';
-import socketIOClient from "socket.io-client";
 import './App.css';
 
 const { ipcRenderer } = window.require('electron');
@@ -19,7 +18,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    ipcRenderer.on('tweet', tweet => {
+    ipcRenderer.on('test', msg => {
+      alert('test')
+    })
+
+    ipcRenderer.on('tweet', (event, tweet) => {
       var tweets = this.state.tweets.slice();
       tweets.unshift(tweet);
       tweets = tweets.slice(0, totalTweetsToShow);
